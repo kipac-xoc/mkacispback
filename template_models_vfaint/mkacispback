@@ -1,3 +1,0 @@
-#! /bin/sh
-
-bash ${ACISPBACK}/make_acispback_model.sh $@
