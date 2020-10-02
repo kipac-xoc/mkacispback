@@ -16,9 +16,9 @@ hiromasa050701@gmail.com
 ### How to use the software:
 1. Set three environment variables as below:
 
-    export ACISPBACK=</path/to/this directory>
-    export ACISPBACK_PYTHON=</path/to/python**>   # python with astropy library (ex. "export ACISPBACK_PYTHON=/usr/local/bin/python3.7")
-    export ACISPBACK_GXX=</path/to/g++**>   # g++ which supports c++11 (ex. "export ACISPBACK_GXX=/usr/local/bin/g++-9")
+      export ACISPBACK=</path/to/this directory>
+      export ACISPBACK_PYTHON=</path/to/python**>   # python with astropy library (ex. "export ACISPBACK_PYTHON=/usr/local/bin/python3.7")
+      export ACISPBACK_GXX=</path/to/g++**>   # g++ which supports c++11 (ex. "export ACISPBACK_GXX=/usr/local/bin/g++-9")
 
 2. Copy the executable file "mkacispback" to /usr/local/bin (or somewhere in the PATH).
 3. Initialize HEAsoft and CIAO before running this command. The environment variable $CALDB must point at the CIAO CALDB.
