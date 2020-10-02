@@ -6,7 +6,7 @@ Author: Hiromasa Suzuki (The University of Tokyo)
 hiromasa050701@gmail.com  
 
 
-### Required software:
+### Requirements:
 - c++11 compiler (ver. 4.2.1, 4.8.5 tested)
 - python (ver. 3.0 or later reguired, 3.5.4, 3.6.8 tested) with "astropy" library
 - CIAO (ver. 4.10, 4.11 tested)
