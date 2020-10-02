@@ -23,4 +23,4 @@ hiromasa050701 (at) gmail.com
 2. Copy the executable file "mkacispback" to /usr/local/bin (or somewhere in the PATH).
 3. Initialize HEAsoft and CIAO before running this command. The environment variable $CALDB must point at the CIAO CALDB.
 4. After running the command, it generates a directory "acispback" (default), which contains the output spectral model "acispback" (default).
-5. Run "mkacispback --h (or -help)" to see the usage.
+5. Run "mkacispback --h" to see the usage.
