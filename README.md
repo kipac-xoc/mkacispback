@@ -3,7 +3,7 @@ mkacispback
 A software to generate spectral models for Chandra ACIS particle-induced background.  
 Version: 2020-09-30  
 Author: Hiromasa Suzuki (The University of Tokyo)  
-hiromasa050701@gmail.com  
+hiromasa050701 (at) gmail.com  
 
 
 ### Requirements:
