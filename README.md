@@ -20,7 +20,16 @@ hiromasa050701 (at) gmail.com
        export ACISPBACK_PYTHON=</path/to/python**>   # python with astropy library (ex. "export ACISPBACK_PYTHON=/usr/local/bin/python3.7")
        export ACISPBACK_GXX=</path/to/g++**>   # g++ which supports c++11 (ex. "export ACISPBACK_GXX=/usr/local/bin/g++-9")
 
-2. Copy the executable file "mkacispback" to /usr/local/bin (or somewhere in the PATH).
+2. Copy the executable file "mkacispback" to /usr/local/bin (or somewhere in the $PATH).
 3. Initialize HEAsoft and CIAO before running this command. The environment variable $CALDB must point at the CIAO CALDB.
 4. After running the command, it generates a directory "acispback" (default), which contains the output spectral model "acispback" (default).
 5. Run "mkacispback --h" to see the usage.
+
+
+### Test platforms
+- MacOS 10.14, 10.15
+- CentOS 7
+
+
+### References
+- To be published
