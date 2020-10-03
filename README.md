@@ -8,9 +8,9 @@ hiromasa050701 (at) gmail.com
 
 ### Requirements:
 - c++11 compiler (ver. 4.2.1, 4.8.5 tested)
-- python (ver. 3.0 or later reguired, 3.5.4, 3.6.8 tested) with "astropy" library
-- CIAO (ver. 4.10, 4.11 tested)
-- HEAsoft (ver. 6.20, 6.26.1 tested)
+- python (ver. 3.0 or later reguired, 3.5.4, 3.6.8, 3.8.5 tested) with "astropy" library
+- CIAO (ver. 4.10, 4.11, 4.12 tested)
+- HEAsoft (ver. 6.20, 6.26, 6.27 tested)
 
 
 ### How to use the software:
