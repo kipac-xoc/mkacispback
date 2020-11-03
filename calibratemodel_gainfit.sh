@@ -86,6 +86,18 @@ xspec >/dev/null <<EOF
 @$XCM
 EOF
 
+NORMALIZATION=`cat ${LOG} |grep  "#   1    1" |grep -oE "[0-9][.][0-9E.+-]+" |grep -m1 -oE "[0-9][.][0-9E.+-]+"`
+echo "normalization = $NORMALIZATION"
+rm acispback_lmod_temp.cpp 2>/dev/null
+while read line; do
+if [ `echo "$line" |grep -c "flux\[i\]=flux_temp2"` -eq 1 ];then line="flux[i]=flux_temp2 *$NORMALIZATION;"; fi
+echo $line >>acispback_lmod_temp.cpp
+done <$LMODOUTCPP
+cp acispback_lmod_temp.cpp $LMODOUTCPP; rm acispback_lmod_temp.cpp
+rm *pkgFunctionMap.* lpack_*pkg.cxx Makefile pkgIndex.tcl ${LMODNAME}.o lpack_*pkg.o $LMODCPP 2>/dev/null
+initpackage ${MONAME}_pkg $LMODDAT . >>$PACKLOG 2>&1
+hmake >>$PACKLOG 2>&1
+
 if [ "${GAINFIT}" -eq 1 ]; then
 echo "gain slope= " `cat ${LOG} |grep -E "(gain)\s+(slope)+\s+" |grep -oE "[0-9\-]+.([0-9E\-]+|[0-9E\+]+)\s+(\+/\-)\s+[0-9\-]+.([0-9E\-]+|[0-9E\+]+)"`
 echo "gain offset= " `cat ${LOG} |grep -E "(gain)\s+(offset)+\s+" |grep -oE "[0-9\-]+.([0-9E\-]+|[0-9E\+]+)\s+(\+/\-)\s+[0-9\-]+.([0-9E\-]+|[0-9E\+]+)"`
