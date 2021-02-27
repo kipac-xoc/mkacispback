@@ -21,6 +21,7 @@ LMODDAT=${20}
 GAINFIT=${21}
 MONAME=${22}
 LOG="temp_calbpbackmodel.log"
+LOG2="temp_calbpbackmodel_entireErange.log"
 IMG="temp_pbackmodel_fit.ps"
 PACKLOG="packagegen.log"
 
@@ -42,14 +43,19 @@ echo "setp e">>$XCM
 echo "setp com cs 1.3">>$XCM
 echo "statistic cstat" >>$XCM
 echo "query yes" >>$XCM
+echo "setp com la t OBSID: " `dmkeypar ${EV2FITS} OBS_ID echo+` >>$XCM
 echo "setp com lw 1 on 1..10000" >>$XCM
 echo "setp com r x 0.25 11.8" >>$XCM
 echo "setp com r y 1e-2 1e0" >>$XCM
 echo "setp com log x off 1 2" >>$XCM
 echo "setp com r y2 0.8 1.2" >>$XCM
+echo "setp com wind 1" >>$XCM
+echo "setp com view 0.1 0.3 0.9 0.9" >>$XCM
+echo "setp com wind 2" >>$XCM
+echo "setp com view 0.1 0.1 0.9 0.3" >>$XCM
+
 echo "data 1:1 temp_spec.pi" >>$XCM
 echo "resp 1 temp.rmf" >>$XCM
-echo "setp com la t OBSID: " `dmkeypar ${EV2FITS} OBS_ID echo+` >>$XCM
 echo "ig **:**" >>$XCM
 echo "no **:9.0-11.5" >>$XCM
 if [ "${GAINFIT}" -eq 1 ]; then
@@ -62,6 +68,7 @@ echo "mo ${MONAME}" >>$XCM
 echo "1 0.001" >>$XCM
 echo "pl ld ra" >>$XCM
 echo "fit" >>$XCM
+echo "fit" >>$XCM
 echo "log ${LOG}" >>$XCM
 echo "sho data" >>$XCM
 echo "sho param" >>$XCM
@@ -69,7 +76,7 @@ echo "sho fit" >>$XCM
 echo "log none" >>$XCM
 echo "ig **:**" >>$XCM
 echo "no **:0.25-11.5" >>$XCM
-echo "setp rebin 10 50" >>$XCM
+echo "setp rebin 20 50" >>$XCM
 echo "pl ld ra" >>$XCM
 
 echo "no **:0.25-11.5" >>$XCM
@@ -80,6 +87,12 @@ echo "cpd none" >>$XCM
 echo "cpd /xs" >>$XCM
 echo "pl ld ra" >>$XCM
 echo "save mo ${OUTMODEL}" >>$XCM
+
+echo "log ${LOG2}" >>$XCM
+echo "sho data" >>$XCM
+echo "sho param" >>$XCM
+echo "sho fit" >>$XCM
+echo "log none" >>$XCM
 
 rm ${OUTMODEL} 2>/dev/null
 xspec >/dev/null <<EOF

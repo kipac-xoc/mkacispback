@@ -1,7 +1,7 @@
 #! /bin/sh
 
 ### default parameter values
-WEMIN=8000   # Emin for weight map
+WEMIN=9000   # Emin for weight map
 WEMAX=11500   # Emin for weight map
 RMFDELTAE=0.005   # delta E of rmf
 GENWMAP=1   # generate weight map or use already existing one
@@ -47,7 +47,7 @@ if [ $FORVF = "yes" ]; then FORVF=vfaint; fi
 TEMPMOD_DIR="${SCRIPT_DIR}/template_models_${FORVF}"
 ###
 
-ARGS="${WEMIN} ${WEMAX} ${RMFDELTAE} ${GENWMAP} ${GENSPEC} ${GENRMF} ${CLOB} ${STOWEDFLAG} ${FS_EBOUNDFLAG} ../${EV2FITS_MAIN} ${FORVF} ${SCRIPT_DIR} ${TEMPMOD_DIR} ${OUTMODEL} ${XCM} ${LMODNAME} ${LMODCALC} ${LMODCPP} ${LMODOUTCPP} ${LMODDAT} ${GAINFIT} ${MONAME}"
+ARGS="${WEMIN} ${WEMAX} ${RMFDELTAE} ${GENWMAP} ${GENSPEC} ${GENRMF} ${CLOB} ${STOWEDFLAG} ${FS_EBOUNDFLAG} ../${EV2FITS_MAIN} ${FORVF} ${SCRIPT_DIR} ${TEMPMOD_DIR} ${OUTMODEL} ${XCM} ${LMODNAME} ${LMODCALC} ${LMODCPP} ${LMODOUTCPP} ${LMODDAT} ${GAINFIT} ${MONAME} $2 $3"
 
 ### output some setup parameters
 OBSID=`dmkeypar "${EV2FITS}" OBS_ID echo+`

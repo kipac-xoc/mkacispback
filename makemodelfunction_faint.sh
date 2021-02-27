@@ -19,6 +19,8 @@ LMODCPP=${18}
 LMODOUTCPP=${19}
 LMODDAT=${20}
 COMPLOG="compilation.log"
+AVERATE=${23}
+ALPHA=${24}
 
 MAINFUNC="flux_temp = "
 
@@ -134,11 +136,18 @@ BKN2_G2=()
 BKN2_B=()
 BKN2_N=()
 
+WEIGHT_T=()
+declare -a WEIGHT_T=(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
 WEIGHT=()
 declare -a WEIGHT=(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
 DELTA_E=()
 declare -a DELTA_E=(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
 if [ "$CCD" -eq 1 ];then CCD_TEMP=0; else CCD_TEMP="$CCD"; fi
+CNTS=0
+while read line; do
+WEIGHT_T[$CNTS]=$line
+CNTS=$(( CNTS+1 ))
+done <${SCRIPT_DIR}/template_models_faint/weightmap/temp_weightmap_ccd${CCD}_energy9000to11500.dat
 CNTS=0
 SUMWEIGHT=0
 while read line; do
@@ -157,17 +166,17 @@ done <temp_calcdeltaE_ccd${CCD}.dat
 fi
 
 punlearn dmextract
-dmextract infile="${EV2FITS}[ccd_id=${CCD}][energy=8000:11500][bin pi=1:1024:1]" mode=h verbose=0 outfile=temp_spec_whole_ccd${CCD}_energy8000to11500.pi clobber=$CLOB >/dev/null
-TOTCTS=`dmkeypar temp_spec_whole_ccd${CCD}_energy8000to11500.pi TOTCTS echo+`
-EXPOSURE=`dmkeypar temp_spec_whole_ccd${CCD}_energy8000to11500.pi EXPOSURE echo+`
+dmextract infile="${EV2FITS}[ccd_id=${CCD}][energy=9000:11500][bin pi=1:1024:1]" mode=h verbose=0 outfile=temp_spec_whole_ccd${CCD}_energy9000to11500.pi clobber=$CLOB >/dev/null
+TOTCTS=`dmkeypar temp_spec_whole_ccd${CCD}_energy9000to11500.pi TOTCTS echo+`
+EXPOSURE=`dmkeypar temp_spec_whole_ccd${CCD}_energy9000to11500.pi EXPOSURE echo+`
 RATE=`perl -e "print ${TOTCTS}/${EXPOSURE}"`
-if [ "$CCD" -eq 0 ];then AVERATE=0.23; ALPHA=0.25; fi
-if [ "$CCD" -eq 1 ];then AVERATE=0.23; ALPHA=0.25; CCD1FAC=0.70; fi
-if [ "$CCD" -eq 2 ];then AVERATE=0.23; ALPHA=0.25; fi
-if [ "$CCD" -eq 3 ];then AVERATE=0.28; ALPHA=0.10; fi
-if [ "$CCD" -eq 5 ];then AVERATE=1.95; ALPHA=0.30; fi
-if [ "$CCD" -eq 6 ];then AVERATE=0.27; ALPHA=0.15; fi
-if [ "$CCD" -eq 7 ];then AVERATE=1.05; ALPHA=0.40; fi
+CCD1FAC=0.70
+if [ "$CCD" -eq 0 -o "$CCD" -eq 1 ];then AVERATE=0.25; ALPHA=0.10; fi
+if [ "$CCD" -eq 2 ];then AVERATE=0.20; ALPHA=0.25; fi
+if [ "$CCD" -eq 3 ];then AVERATE=0.25; ALPHA=0.10; fi
+if [ "$CCD" -eq 5 ];then AVERATE=1.45; ALPHA=0.35; fi
+if [ "$CCD" -eq 6 ];then AVERATE=0.15; ALPHA=0.05; fi
+if [ "$CCD" -eq 7 ];then AVERATE=0.90; ALPHA=0.55; fi
 
 ## weighed sum of components in template models
 for MOD_NO in `seq 32`; do
@@ -178,127 +187,127 @@ VAL=`echo "${line}" grep -oE "([0-9\-]+\.([0-9e\-]|[0-9e\+])+|[0-9e\+]+)\s+([0-9
 VAL=`echo $VAL |grep -oE "^([0-9\-]+\.([0-9e\-]|[0-9e\+])+|[0-9e\+]+)"`
 if [ "${LINE_NO}" -eq 9 -o "${LINE_NO}" -eq 12 -o "${LINE_NO}" -eq 15 -o "${LINE_NO}" -eq 18 -o "${LINE_NO}" -eq 21 -o "${LINE_NO}" -eq 24 -o "${LINE_NO}" -eq 27 -o "${LINE_NO}" -eq 30 -o "${LINE_NO}" -eq 33 -o "${LINE_NO}" -eq 36 -o "${LINE_NO}" -eq 39 -o "${LINE_NO}" -eq 42 -o "${LINE_NO}" -eq 45 -o "${LINE_NO}" -eq 48 -o "${LINE_NO}" -eq 51 ]; then LINE_E[$(( (LINE_NO-9)/3 ))]=$VAL; fi
 if [ "${LINE_NO}" -eq 10 -o "${LINE_NO}" -eq 13 -o "${LINE_NO}" -eq 16 -o "${LINE_NO}" -eq 19 -o "${LINE_NO}" -eq 22 -o "${LINE_NO}" -eq 25 -o "${LINE_NO}" -eq 28 -o "${LINE_NO}" -eq 31 -o "${LINE_NO}" -eq 34 -o "${LINE_NO}" -eq 37 -o "${LINE_NO}" -eq 40 -o "${LINE_NO}" -eq 43 -o "${LINE_NO}" -eq 46 -o "${LINE_NO}" -eq 49 -o "${LINE_NO}" -eq 52 ]; then LINE_SIGMA[$(( (LINE_NO-10)/3 ))]=$VAL; fi
-if [ "${LINE_NO}" -eq 11 -o "${LINE_NO}" -eq 14 -o "${LINE_NO}" -eq 17 -o "${LINE_NO}" -eq 20 -o "${LINE_NO}" -eq 23 -o "${LINE_NO}" -eq 26 -o "${LINE_NO}" -eq 29 -o "${LINE_NO}" -eq 32 -o "${LINE_NO}" -eq 35 -o "${LINE_NO}" -eq 38 -o "${LINE_NO}" -eq 41 -o "${LINE_NO}" -eq 44 -o "${LINE_NO}" -eq 47 -o "${LINE_NO}" -eq 50 -o "${LINE_NO}" -eq 53 ]; then LINE_TOT[$(( (LINE_NO-11)/3 ))]=`perl -e "print ${LINE_TOT[$(( (LINE_NO-11)/3 ))]}+${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"`; fi
+if [ "${LINE_NO}" -eq 11 -o "${LINE_NO}" -eq 14 -o "${LINE_NO}" -eq 17 -o "${LINE_NO}" -eq 20 -o "${LINE_NO}" -eq 23 -o "${LINE_NO}" -eq 26 -o "${LINE_NO}" -eq 29 -o "${LINE_NO}" -eq 32 -o "${LINE_NO}" -eq 35 -o "${LINE_NO}" -eq 38 -o "${LINE_NO}" -eq 41 -o "${LINE_NO}" -eq 44 -o "${LINE_NO}" -eq 47 -o "${LINE_NO}" -eq 50 -o "${LINE_NO}" -eq 53 ]; then LINE_TOT[$(( (LINE_NO-11)/3 ))]=`perl -e "print ${LINE_TOT[$(( (LINE_NO-11)/3 ))]}+${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"`; fi
 if [ "${LINE_NO}" -eq 55 -o "${LINE_NO}" -eq 59 -o "${LINE_NO}" -eq 63 -o "${LINE_NO}" -eq 67 ]; then FS_ELOW+=( ${VAL} ); fi
 if [ "${LINE_NO}" -eq 56 -o "${LINE_NO}" -eq 60 -o "${LINE_NO}" -eq 64 -o "${LINE_NO}" -eq 68 ]; then FS_EHIGH+=( ${VAL} ); fi
 if [ "${LINE_NO}" -eq 57 -o "${LINE_NO}" -eq 61 -o "${LINE_NO}" -eq 65 -o "${LINE_NO}" -eq 69 ]; then
-if [ $((`perl -e "print ${VAL} > 1"`+0)) -eq 0 ]; then FSLINE+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); else FSLINE+=( "0" ); fi; fi
+if [ $((`perl -e "print ${VAL} > 1"`+0)) -eq 0 ]; then FSLINE+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); else FSLINE+=( "0" ); fi; fi
 
 if [ "$CCD" -le 3 -o "$CCD" -eq 6 ]; then
 if [ "${LINE_NO}" -eq 70 ]; then G1_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 71 ]; then G1_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 72 ]; then G1_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 72 ]; then G1_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 73 ]; then G2_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 74 ]; then G2_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 75 ]; then G2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 75 ]; then G2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 76 ]; then G3_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 77 ]; then G3_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 78 ]; then G3_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 78 ]; then G3_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 79 ]; then G4_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 80 ]; then G4_S+=( ${VAL} ); fi
-if [ "${LINE_NO}" -eq 81 ]; then G4_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 81 ]; then G4_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 82 ]; then G5_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 83 ]; then G5_S+=( ${VAL} ); fi
-if [ "${LINE_NO}" -eq 84 ]; then G5_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 84 ]; then G5_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 85 ]; then G6_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 86 ]; then G6_S+=( ${VAL} ); fi
-if [ "${LINE_NO}" -eq 87 ]; then G6_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 87 ]; then G6_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 88 ]; then BKN_G1+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 89 ]; then BKN_B+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 90 ]; then BKN_G2+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 91 ]; then BKN_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 91 ]; then BKN_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 92 ]; then break; fi
 fi
 
 if [ "$CCD" -eq 5 ]; then
 if [ "${LINE_NO}" -eq 70 ]; then PL_BI_G+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 71 ]; then PL_BI_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 71 ]; then PL_BI_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 72 ]; then GABS1_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 73 ]; then GABS1_S+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 74 ]; then GABS1_N+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 75 ]; then PL_BI2_G+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 76 ]; then PL_BI2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 76 ]; then PL_BI2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 77 ]; then G5_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 78 ]; then G5_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 79 ]; then G5_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 79 ]; then G5_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 80 ]; then G6_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 81 ]; then G6_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 82 ]; then G6_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 82 ]; then G6_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 83 ]; then G7_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 84 ]; then G7_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 85 ]; then G7_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 85 ]; then G7_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 86 ]; then G8_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 87 ]; then G8_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 88 ]; then G8_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 88 ]; then G8_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 89 ]; then G9_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 90 ]; then G9_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 91 ]; then G9_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 91 ]; then G9_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 92 ]; then G10_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 93 ]; then G10_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 94 ]; then G10_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 94 ]; then G10_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 95 ]; then G11_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 96 ]; then G11_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 97 ]; then G11_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 97 ]; then G11_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 98 ]; then G12_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 99 ]; then G12_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 100 ]; then G12_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 100 ]; then G12_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 101 ]; then G13_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 102 ]; then G13_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 103 ]; then G13_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 103 ]; then G13_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 104 ]; then G14_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 105 ]; then G14_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 106 ]; then G14_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 106 ]; then G14_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 107 ]; then G15_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 108 ]; then G15_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 109 ]; then G15_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 109 ]; then G15_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 110 ]; then G16_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 111 ]; then G16_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 112 ]; then G16_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 112 ]; then G16_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 113 ]; then G17_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 114 ]; then G17_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 115 ]; then G17_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 115 ]; then G17_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 116 ]; then G18_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 117 ]; then G18_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 118 ]; then G18_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 118 ]; then G18_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 119 ]; then G19_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 120 ]; then G19_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 121 ]; then G19_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 121 ]; then G19_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 122 ]; then G20_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 123 ]; then G20_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 124 ]; then G20_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 124 ]; then G20_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 125 ]; then break; fi
 fi
 
 if [ "$CCD" -eq 7 ]; then
 if [ "${LINE_NO}" -eq 70 ]; then G1_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 71 ]; then G1_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 72 ]; then G1_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 72 ]; then G1_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 73 ]; then G2_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 74 ]; then G2_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 75 ]; then G2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 75 ]; then G2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 76 ]; then G3_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 77 ]; then G3_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 78 ]; then G3_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 78 ]; then G3_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 79 ]; then G4_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 80 ]; then G4_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 81 ]; then G4_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 81 ]; then G4_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 82 ]; then G5_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 83 ]; then G5_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 84 ]; then G5_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 84 ]; then G5_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 85 ]; then G6_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 86 ]; then G6_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 87 ]; then G6_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 87 ]; then G6_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 88 ]; then BKN_G1+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 89 ]; then BKN_B+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 90 ]; then BKN_G2+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 91 ]; then BKN_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 91 ]; then BKN_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 92 ]; then BKN2_G1+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 93 ]; then BKN2_B+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 94 ]; then BKN2_G2+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 95 ]; then BKN2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 95 ]; then BKN2_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 96 ]; then G7_E+=( $VAL ); fi
 if [ "${LINE_NO}" -eq 97 ]; then G7_S+=( $VAL ); fi
-if [ "${LINE_NO}" -eq 98 ]; then G7_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}"` ); fi
+if [ "${LINE_NO}" -eq 98 ]; then G7_N+=( `perl -e "print ${VAL}*${WEIGHT[$(( MOD_NO-1 ))]}/${WEIGHT_T[$(( MOD_NO-1 ))]}"` ); fi
 if [ "${LINE_NO}" -eq 99 ]; then break; fi
 fi
 LINE_NO=$(( LINE_NO+1 ))
