@@ -42,4 +42,4 @@ clobber=[yes|no]: Overwrite existing files or not. default: no.
 EXAMPLE:
 $ mkacispback "acisf00000_evt2.fits.gz[sky=region(source.reg)]" outdir=pback-source name=pb_src
 
-Particle-induced background spectral model named "pb_src" for the sky region "source.reg" will be gerenated. Energy grid for the output spectral model is set to 10 eV. Weight map, data spectrum and response matrix will be generated.
+Particle-induced background spectral model named "pb_src" for the sky region "source.reg" will be gerenated in the directory "pback-source". Weight map, data spectrum and response matrix will be generated.
