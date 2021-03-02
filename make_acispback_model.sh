@@ -14,15 +14,17 @@ GAINFIT=1   # 1: fit with free gain parameters, 0: with fixed gain (slope=1.0, o
 OUTMODEL="out_acispback_model.mo"   # output model file name
 MONAME="acispback"   # output XSPEC model name
 DIRNAME="acispback"   # output directory name which contains output spectral model
-###
-
 XCM="temp_makemodel.xcm"
+
 LMODNAME="acispback_lmod"
 LMODCALC="acispback_calc"
 LMODCPP="${LMODCALC}.cpp"
 LMODOUTCPP="${LMODNAME}.cpp"
 LMODDAT="${LMODNAME}.dat"
 SCRIPT_DIR="$ACISPBACK"
+INDATAMODE="none"
+###
+
 
 ### input values
 EV2FITS=$1
@@ -39,15 +41,18 @@ if [ `echo "$@" |grep -c "clobber="` -eq 1 ]; then CLOB=`echo "$@" |grep -oE "cl
 if [ `echo "$@" |grep -c "gainfit="` -eq 1 ]; then GAINFIT=`echo "$@" |grep -cE "gainfit=(yes|\"yes\"|\'yes\')"`; fi
 if [ `echo "$@" |grep -c "outdir="` -eq 1 ]; then DIRNAME=`echo "$@" |grep -oE "(outdir=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
 if [ `echo "$@" |grep -c "name="` -eq 1 ]; then MONAME=`echo "$@" |grep -oE "(name=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
+if [ `echo "$@" |grep -c "datamode="` -eq 1 ]; then INDATAMODE=`echo "$@" |grep -oE "(datamode=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
 
 FORVF=`dmhistory ${EV2FITS} acis_process_events 2>/dev/null|grep -oE "check_vf_pha=[\"noyes]+" |grep -oE "(no|yes)"`
 FORVF=`echo $FORVF |grep -oE "(no|yes)$"`
-if [ $FORVF = "no" ]; then FORVF=faint; fi
-if [ $FORVF = "yes" ]; then FORVF=vfaint; fi
+if [ "$FORVF" = "no" ]; then FORVF=faint; fi
+if [ "$FORVF" = "yes" ]; then FORVF=vfaint; fi
+if [ "$INDATAMODE" = "faint" -o "$INDATAMODE" = "vfaint" ];then FORVF=$INDATAMODE; fi
 TEMPMOD_DIR="${SCRIPT_DIR}/template_models_${FORVF}"
 ###
 
-ARGS="${WEMIN} ${WEMAX} ${RMFDELTAE} ${GENWMAP} ${GENSPEC} ${GENRMF} ${CLOB} ${STOWEDFLAG} ${FS_EBOUNDFLAG} ../${EV2FITS_MAIN} ${FORVF} ${SCRIPT_DIR} ${TEMPMOD_DIR} ${OUTMODEL} ${XCM} ${LMODNAME} ${LMODCALC} ${LMODCPP} ${LMODOUTCPP} ${LMODDAT} ${GAINFIT} ${MONAME} $2 $3"
+if [ ! "`echo "${EV2FITS_MAIN}" |grep -oE . |head -n 1`" = "/" -a ! "`echo "${EV2FITS_MAIN}" |grep -oE . |head -n 1`" = "~" ];then EV2FITS_MAIN="../${EV2FITS_MAIN}"; fi
+ARGS="${WEMIN} ${WEMAX} ${RMFDELTAE} ${GENWMAP} ${GENSPEC} ${GENRMF} ${CLOB} ${STOWEDFLAG} ${FS_EBOUNDFLAG} ${EV2FITS_MAIN} ${FORVF} ${SCRIPT_DIR} ${TEMPMOD_DIR} ${OUTMODEL} ${XCM} ${LMODNAME} ${LMODCALC} ${LMODCPP} ${LMODOUTCPP} ${LMODDAT} ${GAINFIT} ${MONAME} $2 $3"
 
 ### output some setup parameters
 OBSID=`dmkeypar "${EV2FITS}" OBS_ID echo+`
