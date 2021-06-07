@@ -18,10 +18,14 @@ DESCRIPTION
 The output spectral model "out_acispback_model.mo" will be generated in a directory "acispback" (default).
 In order to load the output spectral model in XSPEC, use "lmod" command:
 
-	XSPEC> lmod acispback_pkg ./acispback
+	XSPEC> lmod acispback_pkg ./acispback   # default
 	XSPEC> lmod <model name>_pkg ./<dir. name>   # if you assign a model and directory name
 
-then you can either load the "out_acispback_model.mo" or the model named "acispback" (default name. you can change the name with an option "name").
+then you can load the model as
+
+	XSPEC> model acispback   # dafault
+	XSPEC> model <model name>   # if you assign a model name
+
 We recommend users to use the output spectral model with a free normalization when fitting the data.
 
 
