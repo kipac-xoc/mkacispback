@@ -32,4 +32,4 @@ hiromasa050701 (at) gmail.com
 
 
 ### References
-- To be published
+- Under review, to be published in A&A
