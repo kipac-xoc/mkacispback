@@ -54,7 +54,7 @@ TEMPMOD_DIR="${SCRIPT_DIR}/template_models_${FORVF}"
 if [ ! "`echo "${EV2FITS_MAIN}" |grep -oE . |head -n 1`" = "/" -a ! "`echo "${EV2FITS_MAIN}" |grep -oE . |head -n 1`" = "~" ];then EV2FITS_MAIN="../${EV2FITS_MAIN}"; fi
 ARGS="${WEMIN} ${WEMAX} ${RMFDELTAE} ${GENWMAP} ${GENSPEC} ${GENRMF} ${CLOB} ${STOWEDFLAG} ${FS_EBOUNDFLAG} ${EV2FITS_MAIN} ${FORVF} ${SCRIPT_DIR} ${TEMPMOD_DIR} ${OUTMODEL} ${XCM} ${LMODNAME} ${LMODCALC} ${LMODCPP} ${LMODOUTCPP} ${LMODDAT} ${GAINFIT} ${MONAME} $2 $3"
 
-### output some setup parameters
+### print some setup parameters
 OBSID=`dmkeypar "${EV2FITS}" OBS_ID echo+`
 if [ `echo "$OBSID" |grep -cE "([0-9]+|Merged)"` -eq 0 -o `echo "$FORVF" |grep -cE "(faint|vfaint)"` -eq 0 ]; then
 echo -e "\nInput parameter error !! Stopping... \n"
@@ -66,12 +66,13 @@ echo -e "data mode= ${FORVF} \n"
 ###
 
 
-### make a work directory
+### make a working directory
 if [ ! -e "${DIRNAME}" ]; then mkdir "${DIRNAME}"; fi
 
 ### create region-selected event file
 if [ $((GEMSPEC+GENWMAP+GENRMF)) -gt 0 ]; then
 dmcopy "${EV2FITS}" ${DIRNAME}/temp_evt_regfil.evt option=all clobber="$CLOB" >/dev/null
+if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 fi
 
 cd "$DIRNAME"
@@ -88,11 +89,12 @@ if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 ### take weighed-sum over template models
 if [ "$FORVF" = "faint" ]; then
 bash ${SCRIPT_DIR}/makemodelfunction_faint.sh $ARGS
+if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 fi
 if [ "$FORVF" = "vfaint" ]; then
 bash ${SCRIPT_DIR}/makemodelfunction_vfaint.sh $ARGS
-fi
 if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
+fi
 
 ### calibrate the output spectral model
 bash ${SCRIPT_DIR}/calibratemodel_gainfit.sh $ARGS

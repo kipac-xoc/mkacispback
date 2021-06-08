@@ -18,7 +18,9 @@ if [ "$GENWMAP" -eq 1 ]; then
 echo -e "Processing CCD${CCD}.\n  Creating weight map..."
 punlearn dmextract
 dmextract wmap="[energy=${WEMIN}:${WEMAX}][bin chipx=1:1024:32,chipy=1:1024:32]" mode=h verbose=0 infile="temp_evt_regfil.evt[ccd_id=${CCD}][bin pi=1:1024:1]" outfile=temp_ccd${CCD}_energy${WEMIN}to${WEMAX}.fits clobber="$CLOB" >/dev/null
-${ACISPBACK_PYTHON} ${SCRIPT_DIR}/make_weightmap.py temp_ccd${CCD}_energy${WEMIN}to${WEMAX}.fits >temp_weightmap_ccd${CCD}_energy${WEMIN}to${WEMAX}.dat
+if [ $? -gt 0 ]; then exit 1;fi
+if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "temp_weightmap_ccd${CCD}_energy${WEMIN}to${WEMAX}.dat" ]; then ${ACISPBACK_PYTHON} ${SCRIPT_DIR}/make_weightmap.py temp_ccd${CCD}_energy${WEMIN}to${WEMAX}.fits >temp_weightmap_ccd${CCD}_energy${WEMIN}to${WEMAX}.dat;
+else echo "clobber error while making temp_weightmap_ccd${CCD}_energy${WEMIN}to${WEMAX}.dat."; exit 1; fi
 echo -e "  Created."
 fi
 done

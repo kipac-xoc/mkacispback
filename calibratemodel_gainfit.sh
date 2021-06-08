@@ -25,6 +25,7 @@ LOG2="temp_calbpbackmodel_entireErange.log"
 IMG="temp_pbackmodel_fit.ps"
 PACKLOG="packagegen.log"
 
+if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$LMODDAT" -a ! -e "$LMODOUTCPP" ]; then
 echo "${MONAME} 0 0. 1e5 c_acispback add 0 1" >$LMODDAT
 echo "// created at `date`" >$LMODOUTCPP
 while read line; do
@@ -35,7 +36,9 @@ done <${SCRIPT_DIR}/acispback_model_template.cpp
 rm *pkgFunctionMap.* lpack_*pkg.cxx Makefile pkgIndex.tcl ${LMODNAME}.o lpack_*pkg.o $LMODCPP 2>/dev/null
 initpackage ${MONAME}_pkg $LMODDAT . >$PACKLOG 2>&1
 hmake >>$PACKLOG 2>&1
+else echo "clobber error while making $LMODDAT & $LMODOUTCPP."; exit 1; fi
 
+if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
 echo -e "Calibrating the spectral model...\n"
 echo "Fitting energy range: 9.0-11.5 keV"
 echo "cpd /xs">$XCM
@@ -98,6 +101,7 @@ rm ${OUTMODEL} 2>/dev/null
 xspec >/dev/null <<EOF
 @$XCM
 EOF
+else echo "clobber error while making xcm for calibration."; fi
 
 NORMALIZATION=`cat ${LOG} |grep  "#   1    1" |grep -oE "[0-9][.][0-9E.+-]+" |grep -m1 -oE "[0-9][.][0-9E.+-]+"`
 echo "normalization = $NORMALIZATION"
