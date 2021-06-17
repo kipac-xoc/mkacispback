@@ -51,7 +51,7 @@ echo "setp com lw 1 on 1..10000" >>$XCM
 echo "setp com r x 0.25 11.8" >>$XCM
 echo "setp com r y 1e-2 1e0" >>$XCM
 echo "setp com log x off 1 2" >>$XCM
-echo "setp com r y2 0.8 1.2" >>$XCM
+echo "setp com r y2 0. 2." >>$XCM
 echo "setp com wind 1" >>$XCM
 echo "setp com view 0.1 0.3 0.9 0.9" >>$XCM
 echo "setp com wind 2" >>$XCM
@@ -70,7 +70,8 @@ echo "lmod ${MONAME}_pkg ./" >>$XCM
 echo "mo ${MONAME}" >>$XCM
 echo "1 0.001" >>$XCM
 echo "pl ld ra" >>$XCM
-echo "fit" >>$XCM
+echo "setp com r y1" >>$XCM
+echo "pl ld ra" >>$XCM
 echo "fit" >>$XCM
 echo "log ${LOG}" >>$XCM
 echo "sho data" >>$XCM
@@ -79,7 +80,8 @@ echo "sho fit" >>$XCM
 echo "log none" >>$XCM
 echo "ig **:**" >>$XCM
 echo "no **:0.25-11.5" >>$XCM
-echo "setp rebin 20 50" >>$XCM
+echo "setp rebin 5 50" >>$XCM
+echo "setp com r y1" >>$XCM
 echo "pl ld ra" >>$XCM
 
 echo "no **:0.25-11.5" >>$XCM
@@ -119,6 +121,7 @@ if [ "${GAINFIT}" -eq 1 ]; then
 echo "gain slope= " `cat ${LOG} |grep -E "(gain)\s+(slope)+\s+" |grep -oE "[0-9\-]+.([0-9E\-]+|[0-9E\+]+)\s+(\+/\-)\s+[0-9\-]+.([0-9E\-]+|[0-9E\+]+)"`
 echo "gain offset= " `cat ${LOG} |grep -E "(gain)\s+(offset)+\s+" |grep -oE "[0-9\-]+.([0-9E\-]+|[0-9E\+]+)\s+(\+/\-)\s+[0-9\-]+.([0-9E\-]+|[0-9E\+]+)"`
 fi
+
 CSTAT=`cat ${LOG} |grep -E "(C-Statistic)\s+" |grep -oE "([0-9]+[\.][0-9E\+]+)"`
 DOF=`cat ${LOG} |grep -oE -m 1 "([0-9]+\s(degrees of freedom))" |grep -oE "[0-9]+[0-9E\+]+"`
 echo -e "C-Statistic/d.o.f.= ${CSTAT}/${DOF} \n"
