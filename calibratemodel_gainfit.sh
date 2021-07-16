@@ -20,9 +20,9 @@ LMODOUTCPP=${19}
 LMODDAT=${20}
 GAINFIT=${21}
 MONAME=${22}
-LOG="temp_calbpbackmodel.log"
-LOG2="temp_calbpbackmodel_entireErange.log"
-IMG="temp_pbackmodel_fit.ps"
+LOG="calbpbackmodel.log"
+LOG2="calbpbackmodel_entireErange.log"
+IMG="pbackmodel_fit.ps"
 PACKLOG="packagegen.log"
 
 if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$LMODDAT" -a ! -e "$LMODOUTCPP" ]; then

@@ -14,8 +14,9 @@ GAINFIT=1   # 1: fit with free gain parameters, 0: with fixed gain (slope=1.0, o
 OUTMODEL="out_acispback_model.mo"   # output model file name
 MONAME="acispback"   # output XSPEC model name
 DIRNAME="acispback"   # output directory name which contains output spectral model
-XCM="temp_makemodel.xcm"
+RM_TEMP=0   # remove temporal files
 
+XCM="temp_makemodel.xcm"
 LMODNAME="acispback_lmod"
 LMODCALC="acispback_calc"
 LMODCPP="${LMODCALC}.cpp"
@@ -42,6 +43,7 @@ if [ `echo "$@" |grep -c "gainfit="` -eq 1 ]; then GAINFIT=`echo "$@" |grep -cE 
 if [ `echo "$@" |grep -c "outdir="` -eq 1 ]; then DIRNAME=`echo "$@" |grep -oE "(outdir=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
 if [ `echo "$@" |grep -c "name="` -eq 1 ]; then MONAME=`echo "$@" |grep -oE "(name=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
 if [ `echo "$@" |grep -c "datamode="` -eq 1 ]; then INDATAMODE=`echo "$@" |grep -oE "(datamode=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
+if [ `echo "$@" |grep -c "rm_temp="` -eq 1 ]; then RM_TEMP=`echo "$@" |grep -cE "rm_temp=(yes|\"yes\"|\'yes\')"`; fi
 
 FORVF=`dmhistory ${EV2FITS} acis_process_events 2>/dev/null|grep -oE "check_vf_pha=[\"noyes]+" |grep -oE "(no|yes)"`
 FORVF=`echo $FORVF |grep -oE "(no|yes)$"`
@@ -99,6 +101,9 @@ fi
 ### calibrate the output spectral model
 bash ${SCRIPT_DIR}/calibratemodel_gainfit.sh $ARGS
 if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
+
+### remove temporal files
+if [ "$RM_TEMP" -eq 1 ]; then echo "Removing temporal files...\n"; rm temp*; fi
 
 echo -e "All done.\n"
 cd ../

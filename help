@@ -3,10 +3,10 @@ SUBJECT(mkacispback)
 
 Author:
    Hiromasa Suzuki (The University of Tokyo)
-   email: hiromasa.suzuki@phys.s.u-tokyo.ac.jp
+   email: hiromasa050701 (at) gmail.com
 
 SYNOPSIS
-   Generate particle-induced background spectral model for the Chandra ACIS.
+   Generate particle-induced background spectral model for the Chandra ACIS (I0-I3 and S1-S3).
 
 SYNTAX
    mkacispback <input event file (with selection expressions)> (options)
@@ -15,10 +15,10 @@ SYNTAX
 DESCRIPTION
 "mkacispback": generate particle-induced background spectral model for input event file and region.
 
-The output spectral model "out_acispback_model.mo" will be generated in a directory "acispback" (default).
+The output spectral model "acispback" (default) will be generated in a directory "acispback" (default).
 In order to load the output spectral model in XSPEC, use "lmod" command:
 
-	XSPEC> lmod acispback_pkg ./acispback   # default
+	XSPEC> lmod acispback_pkg ./acispback   # default. Note that "./" is required.
 	XSPEC> lmod <model name>_pkg ./<dir. name>   # if you assign a model and directory name
 
 then you can load the model as
@@ -26,20 +26,18 @@ then you can load the model as
 	XSPEC> model acispback   # dafault
 	XSPEC> model <model name>   # if you assign a model name
 
-We recommend users to use the output spectral model with a free normalization when fitting the data.
-
+We recommend users to use the output spectral model with a free normalization when fitting the data in case that the sky emission contaminates in the 9.0-11.5 keV energy range.
 
 OPTIONS:
 outdir=[directory name]: If provided, output directory name can be specified. default: acispback.
 name=[output model name]: If provided, output model name can be specified. As required by XSPEC, this name must consists of lower letters (a-z) and/or underscores (_). It must not include numbers! default: acispback.
-genwmap=[yes|no]: Generate weight map or use already existing files. default: yes.
-genspec=[yes|no]: Generate energy spectrum or use already existing file. default: yes.
 genrmf=[yes|no]: Generate response matrix or not. default: yes.
+genspec=[yes|no]: Generate energy spectrum or use already existing file. default: yes.
+genwmap=[yes|no]: Generate weight map or use already existing files. default: yes.
 rmffile=[file name]: If "genrmf=no", the rmf file can be provided. If provided, the energy grid of the output spectral model will be the same as the rmf file. If not provided, it tries to load the "temp.rmf" in the "acispback" directory.
 egrid=[number (keV)]: Energy grid of output spectral model. default: 0.005.
-wemin=[number (eV)]: Minimum energy for weight map extraction. Integers required. default: 8000
-wemax=[number (eV)]: Maximum energy for weight map extraction. Integers required. default: 11500
 gainfit=[yes|no]: Fit the generated spectral model to the input data with/without free gain parameters. default: yes.
+rm_temp=[yes|no]: Remove temporal files including .pi and .rmf files. default: no.
 clobber=[yes|no]: Overwrite existing files or not. default: no.
 
 

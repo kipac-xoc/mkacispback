@@ -1,7 +1,7 @@
 mkacispback
 =======================  
 A software to generate spectral models for Chandra ACIS particle-induced background.  
-Version: 2020-11-03  
+Version: 2021-07-15
 Author: Hiromasa Suzuki (The University of Tokyo)  
 hiromasa050701 (at) gmail.com  
 
@@ -22,14 +22,17 @@ hiromasa050701 (at) gmail.com
 
 2. Copy the executable file "mkacispback" to /usr/local/bin (or somewhere in the $PATH).
 3. Initialize HEAsoft and CIAO before running this command. The environment variable $CALDB must point at the CIAO CALDB.
-4. After running the command, it generates a directory "acispback" (default), which contains the output spectral model "acispback" (default).
-5. Run "mkacispback --h" to see the usage.
+4. Run "mkacispback --h" to see the usage.
 
 
-### Test platforms
+### Note:
+- By default, mkacispback newly creates an rmf file corresponding to the input source region and this takes some time. To prevent this, provide a prepared rmf file by "genrmf=no" and "rmffile=INFILE".
+
+
+### Test platforms:
 - MacOS 10.14, 10.15
 - CentOS 7
 
 
-### References
+### Reference:
 - Under review, to be published in A&A
