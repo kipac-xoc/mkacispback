@@ -29,7 +29,7 @@ hiromasa050701 (at) gmail.com
 - By default, mkacispback newly creates an rmf file corresponding to the input source region and this takes some time. To prevent this, provide a prepared rmf file by "genrmf=no" and "rmffile=INFILE".
 - Output model name must not include numbers, upper case letters, and must not begin with the words which are already registerd as an XSPEC model (e.g., "name=src" leads to an error because "src" is recognized as the "srcut" model).
 - Depending on observation date, mkacispback may predict lower background coninuum in ~ 2-6 keV especially for the S1 and S3 CCDs. In such cases, you may have to add another power-law model.
-
+- 
 
 
 ### Test platforms:
@@ -39,3 +39,11 @@ hiromasa050701 (at) gmail.com
 
 ### Reference:
 - Under review, to be published in A&A
+
+
+
+![Alt text](figures/vfaint_ccd0_tiled-crop.pdf?raw=true "CCD0, VF")
+![Alt text](figures/vfaint_ccd2_tiled-crop.pdf?raw=true "CCD2, VF")
+![Alt text](figures/vfaint_ccd3_tiled-crop.pdf?raw=true "CCD3, VF")
+![Alt text](figures/vfaint_ccd5_tiled-crop.pdf?raw=true "CCD5, VF")
+![Alt text](figures/vfaint_ccd7_tiled-crop.pdf?raw=true "CCD7, VF")
