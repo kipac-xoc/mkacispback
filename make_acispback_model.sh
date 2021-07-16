@@ -105,7 +105,7 @@ bash ${SCRIPT_DIR}/calibratemodel_gainfit.sh $ARGS
 if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 
 ### remove temporal files
-if [ "$RM_TEMP" -eq 1 ]; then echo "Removing temporal files...\n"; rm temp*; fi
+if [ "$RM_TEMP" -eq 1 ]; then echo -e "Removing temporal files...\n"; rm temp*; fi
 
 echo -e "All done.\n"
 cd ../
