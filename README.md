@@ -42,8 +42,9 @@ hiromasa050701 (at) gmail.com
 
 
 
-![Alt text](figures/vfaint_ccd0_tiled-crop.pdf?raw=true "CCD0, VF")
-![Alt text](figures/vfaint_ccd2_tiled-crop.pdf?raw=true "CCD2, VF")
-![Alt text](figures/vfaint_ccd3_tiled-crop.pdf?raw=true "CCD3, VF")
-![Alt text](figures/vfaint_ccd5_tiled-crop.pdf?raw=true "CCD5, VF")
-![Alt text](figures/vfaint_ccd7_tiled-crop.pdf?raw=true "CCD7, VF")
+![I0, VF mode](figures/vfaint_ccd0_tiled-crop.pdf)
+![I2, VF mode](figures/vfaint_ccd2_tiled-crop.pdf?raw=true "CCD2, VF")
+![I3, VF mode](figures/vfaint_ccd3_tiled-crop.pdf?raw=true "CCD3, VF")
+![S1, VF mode](figures/vfaint_ccd5_tiled-crop.pdf?raw=true "CCD5, VF")
+![S2, VF mode](figures/vfaint_ccd6_tiled-crop.pdf?raw=true "CCD6, VF")
+![S3, VF mode](figures/vfaint_ccd7_tiled-crop.pdf?raw=true "CCD7, VF")
