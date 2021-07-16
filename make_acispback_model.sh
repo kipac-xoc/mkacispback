@@ -43,7 +43,7 @@ if [ `echo "$@" |grep -c "gainfit="` -eq 1 ]; then GAINFIT=`echo "$@" |grep -cE 
 if [ `echo "$@" |grep -c "outdir="` -eq 1 ]; then DIRNAME=`echo "$@" |grep -oE "(outdir=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
 if [ `echo "$@" |grep -c "name="` -eq 1 ]; then MONAME=`echo "$@" |grep -oE "(name=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
 if [ `echo "$@" |grep -c "datamode="` -eq 1 ]; then INDATAMODE=`echo "$@" |grep -oE "(datamode=.+)" |awk -F'[ ]' '{print $1}' |awk -F'[=]' '{print $2}'`; fi
-if [ `echo "$@" |grep -c "rm_temp="` -eq 1 ]; then RM_TEMP=`echo "$@" |grep -cE "rm_temp=(yes|\"yes\"|\'yes\')"`; fi
+if [ `echo "$@" |grep -c "clean="` -eq 1 ]; then RM_TEMP=`echo "$@" |grep -cE "clean=(yes|\"yes\"|\'yes\')"`; fi
 
 FORVF=`dmhistory ${EV2FITS} acis_process_events 2>/dev/null|grep -oE "check_vf_pha=[\"noyes]+" |grep -oE "(no|yes)"`
 FORVF=`echo $FORVF |grep -oE "(no|yes)$"`
@@ -59,10 +59,12 @@ ARGS="${WEMIN} ${WEMAX} ${RMFDELTAE} ${GENWMAP} ${GENSPEC} ${GENRMF} ${CLOB} ${S
 ### print some setup parameters
 OBSID=`dmkeypar "${EV2FITS}" OBS_ID echo+`
 if [ `echo "$OBSID" |grep -cE "([0-9]+|Merged)"` -eq 0 -o `echo "$FORVF" |grep -cE "(faint|vfaint)"` -eq 0 ]; then
-echo -e "\nInput parameter error !! Stopping... \n"
-cat ${SCRIPT_DIR}/help
-exit 1
+	echo -e "\nInput parameter error !! Exiting... \n"
+	cat ${SCRIPT_DIR}/help
+	exit 1
 fi
+if [ `echo "${MONAME}" |grep -cE [0-9]` -gt 0 ];then echo -e "\nError in model name !! It contains a number !! Exiting... \n"; exit 1; fi
+
 echo "OBSID: $OBSID"
 echo -e "data mode= ${FORVF} \n"
 ###
@@ -73,8 +75,8 @@ if [ ! -e "${DIRNAME}" ]; then mkdir "${DIRNAME}"; fi
 
 ### create region-selected event file
 if [ $((GEMSPEC+GENWMAP+GENRMF)) -gt 0 ]; then
-dmcopy "${EV2FITS}" ${DIRNAME}/temp_evt_regfil.evt option=all clobber="$CLOB" >/dev/null
-if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
+	dmcopy "${EV2FITS}" ${DIRNAME}/temp_evt_regfil.evt option=all clobber="$CLOB" >/dev/null
+	if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 fi
 
 cd "$DIRNAME"
@@ -90,12 +92,12 @@ if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 
 ### take weighed-sum over template models
 if [ "$FORVF" = "faint" ]; then
-bash ${SCRIPT_DIR}/makemodelfunction_faint.sh $ARGS
-if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
+	bash ${SCRIPT_DIR}/makemodelfunction_faint.sh $ARGS
+	if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 fi
 if [ "$FORVF" = "vfaint" ]; then
-bash ${SCRIPT_DIR}/makemodelfunction_vfaint.sh $ARGS
-if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
+	bash ${SCRIPT_DIR}/makemodelfunction_vfaint.sh $ARGS
+	if [ $? -gt 0 ]; then echo "Exiting due to an error..."; exit 1;fi
 fi
 
 ### calibrate the output spectral model
