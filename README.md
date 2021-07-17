@@ -43,7 +43,7 @@ hiromasa050701 (at) gmail.com
 ![S1, faint mode](figures/faint_ccd5_tiled-crop.pdf)
 ![S2, faint mode](figures/faint_ccd6_tiled-crop.pdf)
 ![S3, faint mode](figures/faint_ccd7_tiled-crop.pdf)
-
+- Full XSPEC model expressions for each CCD depending on CHIPY regions can be found in [template_models_faint](template_models_faint) and [template_models_vfaint](template_models_vfaint) directories. ".mo" files including "y01" correspond to CHIPY=1:32 and "y32" correspond to CHIPY=993:1024.
 
 
 ### Test platforms:
