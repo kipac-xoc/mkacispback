@@ -53,5 +53,4 @@ hiromasa050701 (at) gmail.com
 
 
 ### Reference:
-- Under review, to be published in A&A
-
+- Suzuki et al. 2021, A&A, in prep.
