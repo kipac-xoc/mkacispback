@@ -28,7 +28,7 @@ hiromasa050701 (at) gmail.com
 ### Notes:
 - By default, mkacispback newly creates an rmf file corresponding to the input source region and this takes some time. To prevent this, provide a prepared rmf file by "genrmf=no" and "rmffile=FILENAME".
 - Output model name must not include numbers, upper case letters, and must not begin with the words already registerd as an XSPEC model (e.g., "name=src" leads to an error because "src" is recognized as the "srcut" model).
-- Depending on the observation date, mkacispback may predict lower background coninua in ~ 2-6 keV especially for the S1 and S3 CCDs. In such cases, you may have to add a power-law model. Please refer to figures which compare mkacispback output models to ACIS-stowed observations for each CCD. To get date from OBSID, refer to the paper below (under revision) or search on the [Chandra data archive](https://cda.harvard.edu/chaser/mainEntry.do).
+- Depending on the observation date, mkacispback may predict lower background coninua in ~ 2-6 keV especially for the S1 and S3 CCDs. In such cases, you may have to add a power-law model. Please refer to figures which compare mkacispback output models to ACIS-stowed observations for each CCD. To get date from OBSID, refer to the paper below.
 	- VFAINT mode 
 ![I0, vfaint mode](figures/vfaint_ccd0_tiled-crop.pdf)
 ![I2, vfaint mode](figures/vfaint_ccd2_tiled-crop.pdf)
@@ -53,4 +53,4 @@ hiromasa050701 (at) gmail.com
 
 
 ### Reference:
-- Suzuki et al. 2021, A&A, in prep.
+- Suzuki et al. 2021, A&A, in prep. ([arXiv link](https://arxiv.org/abs/2108.11234))
