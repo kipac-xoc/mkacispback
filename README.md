@@ -28,7 +28,7 @@ hiromasa050701 (at) gmail.com
 ### Notes:
 - By default, mkacispback newly creates an rmf file corresponding to the input source region and this takes some time. To prevent this, provide a prepared rmf file by "genrmf=no" and "rmffile=FILENAME".
 - Output model name must not include numbers, upper case letters, and must not begin with the words already registerd as an XSPEC model (e.g., "name=src" leads to an error because "src" is recognized as the "srcut" model).
-- Depending on the observation date, mkacispback may predict lower background coninua in ~ 2-6 keV especially for the S1 and S3 CCDs. In such cases, you may have to add a power-law model. Please refer to figures which compare mkacispback output models to ACIS-stowed observations for each CCD. To get date from OBSID, refer to the paper below.
+- Depending on the observation date, mkacispback may predict lower background coninua in ~ 2-6 keV especially for the S1 and S3 CCDs. In such cases, you may have to add an additional power-law model. Please refer to the figures below which compare mkacispback output models to ACIS-stowed observations for each CCD. To get date from OBSID, refer to the paper below.
 	- VFAINT mode 
 ![I0, vfaint mode](figures/vfaint_ccd0_tiled-crop.pdf)
 ![I2, vfaint mode](figures/vfaint_ccd2_tiled-crop.pdf)
@@ -43,7 +43,7 @@ hiromasa050701 (at) gmail.com
 ![S1, faint mode](figures/faint_ccd5_tiled-crop.pdf)
 ![S2, faint mode](figures/faint_ccd6_tiled-crop.pdf)
 ![S3, faint mode](figures/faint_ccd7_tiled-crop.pdf)
-- Note that using an analysis region covering multiple CCDs may result in a large discrepancy between the data and acispback model. If so, apply mkacispback for individual CCDs and do a simultaneous fit.
+- Note that using an analysis region covering multiple CCDs may result in larger discrepancies between the data and acispback model than expected. If so, apply mkacispback for individual CCDs and do a simultaneous fit.
 - Full XSPEC model expressions for each CCD depending on CHIPY regions can be found in [template_models_faint](template_models_faint) and [template_models_vfaint](template_models_vfaint) directories. The 32 models corresponding to different CHIPY positions are stored. The files including "y01" and "y32" in their names, for example, correspond to CHIPY=1:32  and CHIPY=993:1024 ranges, respectively.
 
 
