@@ -26,13 +26,13 @@ MAINFUNC="flux_temp = "
 
 ## generate proper model for each CCD
 if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "emin.dat" -a ! -e "emax.dat" ]; then
-rm temp_emin.dat temp_emax.dat 2>/dev/null
-dmlist "temp.rmf[cols ENERG_LO]" opt=data outfile=temp_emin_.dat
-cat temp_emin_.dat |grep -oE "[0-9]+\s+[0-9]+.[0-9]+" |grep -oE "\s[0-9]+.[0-9]+" >emin.dat
-dmlist "temp.rmf[cols ENERG_HI]" opt=data outfile=temp_emax_.dat
-cat temp_emax_.dat |grep -oE "[0-9]+\s+[0-9]+.[0-9]+" |grep -oE "\s[0-9]+.[0-9]+" >emax.dat
-while read line; do RMFDELTAE=$line; break; done <emin.dat
-while read line; do RMFDELTAE=`perl -e "print $line - $RMFDELTAE"`; break; done <emax.dat
+	rm temp_emin.dat temp_emax.dat 2>/dev/null
+	dmlist "temp.rmf[cols ENERG_LO]" opt=data outfile=temp_emin_.dat
+	cat temp_emin_.dat |grep -oE "[0-9]+\s+[0-9]+.[0-9]+" |grep -oE "\s[0-9]+.[0-9]+" >emin.dat
+	dmlist "temp.rmf[cols ENERG_HI]" opt=data outfile=temp_emax_.dat
+	cat temp_emax_.dat |grep -oE "[0-9]+\s+[0-9]+.[0-9]+" |grep -oE "\s[0-9]+.[0-9]+" >emax.dat
+	while read line; do RMFDELTAE=$line; break; done <emin.dat
+	while read line; do RMFDELTAE=`perl -e "print $line - $RMFDELTAE"`; break; done <emax.dat
 else echo "clobber error while making emin.dat & emax.dat."; exit 1; fi
 
 echo "Generating spectral model..."
@@ -149,12 +149,14 @@ if [ $? -gt 0 ]; then exit 1;fi
 TOTCTS=`dmkeypar temp_spec_whole_ccd${CCD}_energy9000to11500.pi TOTCTS echo+`
 EXPOSURE=`dmkeypar temp_spec_whole_ccd${CCD}_energy9000to11500.pi EXPOSURE echo+`
 RATE=`perl -e "print ${TOTCTS}/${EXPOSURE}"`
+ALPHA=0.0
+AVERATE=1.0
 CCD1FAC=0.90
-if [ "${CCD}" -eq 0 -o "${CCD}" -eq 1 ];then AVERATE=0.20; ALPHA=0.10; fi
-if [ "${CCD}" -eq 2 ];then AVERATE=0.10; ALPHA=0.27; fi
-if [ "${CCD}" -eq 3 ];then AVERATE=0.13; ALPHA=0.10; fi
+#if [ "${CCD}" -eq 0 -o "${CCD}" -eq 1 ];then AVERATE=0.20; ALPHA=0.10; fi
+#if [ "${CCD}" -eq 2 ];then AVERATE=0.10; ALPHA=0.27; fi
+#if [ "${CCD}" -eq 3 ];then AVERATE=0.13; ALPHA=0.10; fi
 if [ "${CCD}" -eq 5 ];then AVERATE=1.25; ALPHA=0.20; fi
-if [ "${CCD}" -eq 6 ];then AVERATE=0.10; ALPHA=0.10; fi
+#if [ "${CCD}" -eq 6 ];then AVERATE=0.10; ALPHA=0.10; fi
 if [ "${CCD}" -eq 7 ];then AVERATE=0.76; ALPHA=0.57; fi
 
 ## weighed sum of components in template models
@@ -500,18 +502,18 @@ done
 MAINFUNC+="0;"
 
 if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$LMODCPP" ]; then
-echo "// created at `date`" >$LMODCPP
-while read line; do
-echo "$line" >>$LMODCPP
-done <${SCRIPT_DIR}/acispback_model_template_calc.cpp
-echo "$MAINFUNC">>$LMODCPP
-echo "ofs<< ewidth*flux_temp << std::endl;">>$LMODCPP
-echo "}">>$LMODCPP
-echo "}">>$LMODCPP
-echo "ofs.close();">>$LMODCPP
-echo "}">>$LMODCPP
-${ACISPBACK_GXX} -std=c++11 $LMODCPP -o ${LMODCALC} >$COMPLOG
-./${LMODCALC}
+	echo "// created at `date`" >$LMODCPP
+	while read line; do
+		echo "$line" >>$LMODCPP
+	done <${SCRIPT_DIR}/acispback_model_template_calc.cpp
+	echo "$MAINFUNC">>$LMODCPP
+	echo "ofs<< ewidth*flux_temp << std::endl;">>$LMODCPP
+	echo "}">>$LMODCPP
+	echo "}">>$LMODCPP
+	echo "ofs.close();">>$LMODCPP
+	echo "}">>$LMODCPP
+	${ACISPBACK_GXX} -std=c++11 $LMODCPP -o ${LMODCALC} >$COMPLOG
+	./${LMODCALC}
 else echo "clobber error while making $LMODCPP."; exit 1; fi
 
 echo -e "Generated."
