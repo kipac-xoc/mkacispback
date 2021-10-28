@@ -48,8 +48,12 @@ hiromasa050701 (at) gmail.com
 
 
 ### Test platforms:
-- MacOS 10.14, 10.15
+- MacOS 10.14, 10.15, 11.4 (Intel-based)
 - CentOS 7
+
+
+### Known issues:
+- "initpackage" errors on MacOS with Apple M1 chips
 
 
 ### Reference:
