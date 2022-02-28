@@ -53,8 +53,8 @@ hiromasa050701 (at) gmail.com
 
 
 ### Known issues:
-- "initpackage" errors on MacOS with Apple M1 chips
+- "initpackage" might fail on MacOS with Apple M1 chips
 
 
 ### Reference:
-- Suzuki et al. 2021, A&A, in press ([arXiv link](https://arxiv.org/abs/2108.11234))
+- [Suzuki et al. 2021, A&A, 665, A116](https://doi.org/10.1051/0004-6361/202141458)
