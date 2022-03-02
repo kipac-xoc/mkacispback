@@ -8,9 +8,9 @@ hiromasa050701 (at) gmail.com
 
 ### Requirements:
 - c++11 compiler (ver. 4.2.1, 4.8.5 tested)
-- python (ver. 3.0 or later reguired, 3.5.4, 3.6.8, 3.8.5 tested) with "astropy" library
-- CIAO (ver. 4.10, 4.11, 4.12 tested)
-- HEAsoft (ver. 6.20, 6.26, 6.27 tested)
+- python (ver. 3.0 or later reguired; 3.5.4, 3.6.8, 3.8.5 tested) with "astropy" library
+- CIAO (ver. 4.10, 4.11, 4.12, 4.14 tested)
+- HEAsoft (ver. 6.20, 6.26, 6.27, 6.29 tested)
 
 
 ### How to use the software:
@@ -48,7 +48,7 @@ hiromasa050701 (at) gmail.com
 
 
 ### Test platforms:
-- MacOS 10.14, 10.15, 11.4 (Intel-based)
+- MacOS 10.14, 10.15, 11.4 (Intel-based), 12.0.1 (Apple M1)
 - CentOS 7
 
 
