@@ -35,7 +35,7 @@ genrmf=[yes|no]: Generate response matrix or not. default: yes.
 genspec=[yes|no]: Generate energy spectrum or use already existing file. default: yes.
 genwmap=[yes|no]: Generate weight map or use already existing files. default: yes.
 rmffile=[file name]: If "genrmf=no", the rmf file can be provided. If provided, the energy grid of the output spectral model will be the same as the rmf file. If not provided, it tries to load the "temp.rmf" in the "acispback" directory.
-egrid=[number (keV)]: Energy grid of output spectral model. default: 0.005.
+egrid=[number (keV)]: Energy grid of output spectral model. default: 0.05.
 gainfit=[yes|no]: Fit the generated spectral model to the input data with/without free gain parameters. default: yes.
 clean=[yes|no]: Remove temporal files including .pi and .rmf files. default: no.
 clobber=[yes|no]: Overwrite existing files or not. default: no.

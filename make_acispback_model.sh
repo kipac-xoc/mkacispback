@@ -3,7 +3,7 @@
 ### default parameter values
 WEMIN=9000   # Emin for weight map
 WEMAX=11500   # Emin for weight map
-RMFDELTAE=0.005   # delta E of rmf
+RMFDELTAE=0.05   # delta E of rmf
 GENWMAP=1   # generate weight map or use already existing one
 GENSPEC=1   # generate data spectrum or use already existing one
 GENRMF=1   # generate rmf or use already existing one
