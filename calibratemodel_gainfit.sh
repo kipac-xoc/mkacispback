@@ -53,14 +53,14 @@ echo "setp com r y 1e-2 1e0" >>$XCM
 echo "setp com log x off 1 2" >>$XCM
 echo "setp com r y2 0. 2." >>$XCM
 echo "setp com wind 1" >>$XCM
-echo "setp com view 0.1 0.3 0.9 0.9" >>$XCM
+echo "setp com view 0.12 0.3 0.9 0.9" >>$XCM
 echo "setp com wind 2" >>$XCM
-echo "setp com view 0.1 0.1 0.9 0.3" >>$XCM
+echo "setp com view 0.12 0.1 0.9 0.3" >>$XCM
 echo "setp com win 1" >>$XCM
 echo "setp com la y Counts s\\\\\\\\u-1\\\\\\\\d keV\\\\\\\\u-1" >>$XCM
 echo "setp com win 2" >>$XCM
 echo "setp com la y Data/Model" >>$XCM
-echo "setp com la pos y 2.6" >>$XCM
+echo "setp com la pos y 3.3" >>$XCM
 
 echo "data 1:1 temp_spec.pi" >>$XCM
 echo "resp 1 temp.rmf" >>$XCM
