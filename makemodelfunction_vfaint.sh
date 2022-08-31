@@ -125,7 +125,7 @@ CNTS=0
 while read line; do
 WEIGHT_T[$CNTS]=$line
 CNTS=$(( CNTS+1 ))
-done <${SCRIPT_DIR}/template_models_faint/weightmap/temp_weightmap_ccd${CCD}_energy9000to11500.dat
+done <${SCRIPT_DIR}/template_models_vfaint/weightmap/temp_weightmap_ccd${CCD}_energy9000to11500.dat
 CNTS=0
 SUMWEIGHT=0
 while read line; do
