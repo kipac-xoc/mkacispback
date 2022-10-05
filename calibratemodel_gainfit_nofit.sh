@@ -104,12 +104,14 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo "log none" >>$XCM
 
     rm ${OUTMODEL} 2>/dev/null
-    xspec >/dev/null <<EOF
-@$XCM
-EOF
+#     xspec >/dev/null <<EOF
+# @$XCM
+# EOF
 else echo "clobber error while making xcm for calibration."; fi
 
-NORMALIZATION=$(cat ${LOG} | grep "#   1    1" | grep -oE "[0-9][.][0-9E.+-]+" | grep -m1 -oE "[0-9][.][0-9E.+-]+")
+# NORMALIZATION=$(cat ${LOG} | grep "#   1    1" | grep -oE "[0-9][.][0-9E.+-]+" | grep -m1 -oE "[0-9][.][0-9E.+-]+")
+NORMALIZATION=1
+
 echo "normalization = $NORMALIZATION"
 #Added-Taweewat-8/31/22
 echo "normalization = $NORMALIZATION" > norm_error.cat

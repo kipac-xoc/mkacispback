@@ -22,6 +22,9 @@ COMPLOG="compilation.log"
 AVERATE=${23}
 ALPHA=${24}
 
+echo "EventFILESfromvFaint: ${EV2FITS}"
+
+
 MAINFUNC="flux_temp = "
 
 ## generate proper model for each CCD
