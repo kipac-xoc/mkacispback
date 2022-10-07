@@ -151,5 +151,13 @@ if [ "$RM_TEMP" -eq 1 ]; then
 	rm temp*
 fi
 
-echo -e "All done.\n"
+### reporting the norm/area/weight added Taweewat 10/6/22
 cd ../
+${ACISPBACK_PYTHON} ${SCRIPT_DIR}/calculate_norm_area_weight.py ${REGIONFILE}
+if [ $? -gt 0 ]; then
+	echo "Exiting due to an error at the reporting norm step"
+	exit 1
+fi
+
+echo -e "All done.\n"
+# cd ../
