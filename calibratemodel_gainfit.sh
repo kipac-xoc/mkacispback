@@ -77,7 +77,7 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo "pl ld ra" >>$XCM
     echo "fit" >>$XCM
     echo "log ${LOG}" >>$XCM
-    #echo "error 1.0 1" >>$XCM
+    echo "error 1.0 1" >>$XCM  #error line
     echo "sho data" >>$XCM
     echo "sho param" >>$XCM
     echo "sho fit" >>$XCM
@@ -112,8 +112,10 @@ else echo "clobber error while making xcm for calibration."; fi
 NORMALIZATION=$(cat ${LOG} | grep "#   1    1" | grep -oE "[0-9][.][0-9E.+-]+" | grep -m1 -oE "[0-9][.][0-9E.+-]+")
 echo "normalization = $NORMALIZATION"
 #Added-Taweewat-8/31/22
-echo "normalization = $NORMALIZATION" > norm_error.cat
-#cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9E.+-]+" | head -2 | tr "\n" " " >> norm_error.cat
+# echo "normalization = $NORMALIZATION" > norm_error.cat
+# cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9E.+-]+" | head -2 | tr "\n" " " >> norm_error.cat
+rm norm_error.cat
+cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9eE.+-]+" | head -4 | tr "\n" " " >> norm_error.cat
 ###
 rm acispback_lmod_temp.cpp 2>/dev/null
 while read line; do
