@@ -26,7 +26,6 @@ def main():
     # cfilename = f'{cfile.split("_")[0]}pix_{cfile.split("_")[1]}' if '_' in cfile else f'{cfile}pix_c3'
     # if args.offcluster:
     #     cfilename = cfile
-        
 
     s1 = Spectrum(f"{cfilename}.pi")
     area = s1.backScale*(8192*0.492/60)**2; print(f"area of {cfilename} = {area} arcmin^2") 
