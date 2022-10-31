@@ -115,7 +115,7 @@ echo "normalization = $NORMALIZATION"
 # echo "normalization = $NORMALIZATION" > norm_error.cat
 # cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9E.+-]+" | head -2 | tr "\n" " " >> norm_error.cat
 rm norm_error.cat
-cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9eE.+-]+" | head -4 | tr "\n" " " >> norm_error.cat
+cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9eE.+-]+" | head -4 | tr "\n" " " > norm_error.cat
 ###
 rm acispback_lmod_temp.cpp 2>/dev/null
 while read line; do
