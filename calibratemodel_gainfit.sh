@@ -36,6 +36,7 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$LMODDAT" -a ! -e "$LMODOUTC
     rm *pkgFunctionMap.* lpack_*pkg.cxx Makefile pkgIndex.tcl ${LMODNAME}.o lpack_*pkg.o $LMODCPP 2>/dev/null
     initpackage ${MONAME}_pkg $LMODDAT . >$PACKLOG 2>&1
     hmake >>$PACKLOG 2>&1
+    rm temp_spec_grp.pi 2>/dev/null
 else
     echo "clobber error while making $LMODDAT & $LMODOUTCPP."
     exit 1
@@ -60,7 +61,15 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo "setp com wind 2" >>$XCM
     echo "setp com view 0.1 0.1 0.9 0.3" >>$XCM
 
-    echo "data 1:1 temp_spec.pi" >>$XCM
+    if [ "${GAINFIT}" -eq 1 ]; then    
+        echo "data 1:1 temp_spec.pi" >>$XCM
+        echo "backgrnd none" >>$XCM
+    else
+        echo "test -f temp_spec_grp.pi && rm temp_spec_grp.pi" >>$XCM
+        echo "grppha temp_spec.pi temp_spec_grp.pi comm='group 617 788 172 & exit'" >>$XCM #genspec=no
+        echo "data 1:1 temp_spec_grp.pi" >>$XCM
+        echo "backgrnd none" >>$XCM
+    fi 
     echo "resp 1 temp.rmf" >>$XCM
     echo "ig **:**" >>$XCM
     echo "no **:9.0-11.5" >>$XCM
@@ -77,7 +86,9 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo "pl ld ra" >>$XCM
     echo "fit" >>$XCM
     echo "log ${LOG}" >>$XCM
-    echo "error 1.0 1" >>$XCM  #error line
+    if [ "${GAINFIT}" -eq 1 ]; then
+        echo "error 1.0 1" >>$XCM  #error line
+    fi
     echo "sho data" >>$XCM
     echo "sho param" >>$XCM
     echo "sho fit" >>$XCM
@@ -110,12 +121,14 @@ EOF
 else echo "clobber error while making xcm for calibration."; fi
 
 NORMALIZATION=$(cat ${LOG} | grep "#   1    1" | grep -oE "[0-9][.][0-9E.+-]+" | grep -m1 -oE "[0-9][.][0-9E.+-]+")
-echo "normalization = $NORMALIZATION"
+echo "normalization = ${NORMALIZATION}"
 #Added-Taweewat-8/31/22
-# echo "normalization = $NORMALIZATION" > norm_error.cat
-# cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9E.+-]+" | head -2 | tr "\n" " " >> norm_error.cat
 rm norm_error.cat
-cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9eE.+-]+" | head -4 | tr "\n" " " > norm_error.cat
+if [ "${GAINFIT}" -eq 1 ]; then
+    cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9eE.+-]+" | head -4 | tr "\n" " " > norm_error.cat
+else
+    echo ${NORMALIZATION} > norm_error.cat
+fi
 ###
 rm acispback_lmod_temp.cpp 2>/dev/null
 while read line; do

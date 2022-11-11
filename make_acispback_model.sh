@@ -54,10 +54,12 @@ if [ $(echo "$@" | grep -c "clean=") -eq 1 ]; then RM_TEMP=$(echo "$@" | grep -c
 
 ## Edit Taweewat 9/14/2022
 if [ $(echo "$@" | grep -c "normfit=") -eq 1 ]; then NORMFIT=$(echo "$@" | grep -cE "normfit=(yes|\"yes\"|\'yes\')"); fi
-
+if [ $(echo "$@" | grep -c "specfile=") -eq 1 ]; then
+	SPECFILE=$(echo "$@" | grep -oE "(specfile=.+)" | awk -F'[ ]' '{print $1}' | awk -F'[=]' '{print $2}')
+	GENSPEC=0
+fi
 
 echo "NORMFIT Parameter = ${NORMFIT}"
-
 
 FORVF=$(dmhistory ${EV2FITS} acis_process_events 2>/dev/null | grep -oE "check_vf_pha=[\"noyes]+" | grep -oE "(no|yes)")
 FORVF=$(echo $FORVF | grep -oE "(no|yes)$")
@@ -111,6 +113,11 @@ fi
 
 ### extract spectrum and rmf from input region
 if [ "$GENRMF" -eq 0 -a $(echo "$@" | grep -c "rmffile=") -eq 1 ]; then cp ../$RMFFILE ./temp.rmf; fi
+if [ "$GENSPEC" -eq 0 -a $(echo "$@" | grep -c "specfile=") -eq 1 ]; then 
+	cp ../$SPECFILE ./temp_spec_original.pi; 
+	test -f temp_spec.pi && rm temp_spec.pi;
+	grppha temp_spec_original.pi temp_spec.pi comm='reset grouping & exit'; #reset the grouping in our spectrum
+fi
 bash ${SCRIPT_DIR}/makespecandrmf.sh $ARGS
 if [ $? -gt 0 ]; then
 	echo "Exiting due to an error..."
@@ -152,8 +159,9 @@ if [ "$RM_TEMP" -eq 1 ]; then
 fi
 
 ### reporting the norm/area/weight added Taweewat 10/6/22
+## GAINFIT is representing whether the data is grouped to 1 bin (GAINFIT=1: no group, GAINTFIT=0: group)
 cd ../
-${ACISPBACK_PYTHON} ${SCRIPT_DIR}/calculate_norm_area_weight.py ${REGIONFILE}
+${ACISPBACK_PYTHON} ${SCRIPT_DIR}/calculate_norm_area_weight.py ${REGIONFILE} ${GAINFIT} 
 if [ $? -gt 0 ]; then
 	echo "Exiting due to an error at the reporting norm step"
 	exit 1
