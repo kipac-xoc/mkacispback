@@ -161,7 +161,7 @@ fi
 ### reporting the norm/area/weight added Taweewat 10/6/22
 ## GAINFIT is representing whether the data is grouped to 1 bin (GAINFIT=1: no group, GAINTFIT=0: group)
 cd ../
-${ACISPBACK_PYTHON} ${SCRIPT_DIR}/calculate_norm_area_weight.py ${REGIONFILE} ${GAINFIT} 
+${ACISPBACK_PYTHON} ${SCRIPT_DIR}/calculate_norm_area_weight.py ${REGIONFILE} ${DIRNAME} 
 if [ $? -gt 0 ]; then
 	echo "Exiting due to an error at the reporting norm step"
 	exit 1
