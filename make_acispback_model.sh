@@ -146,7 +146,6 @@ if [ "$NORMFIT" -gt 0 ]; then
 else
 	bash ${SCRIPT_DIR}/calibratemodel_gainfit_nofit.sh $ARGS
 fi
-
 if [ $? -gt 0 ]; then
 	echo "Exiting due to an error..."
 	exit 1
@@ -157,6 +156,9 @@ if [ "$RM_TEMP" -eq 1 ]; then
 	echo -e "Removing temporal files...\n"
 	rm temp*
 fi
+
+bash ${SCRIPT_DIR}/extracting_highcount.sh ${EV2FITS_MAIN} "../${REGIONFILE}"
+echo "finished estimating uncertainty"
 
 ### reporting the norm/area/weight added Taweewat 10/6/22
 ## GAINFIT is representing whether the data is grouped to 1 bin (GAINFIT=1: no group, GAINTFIT=0: group)

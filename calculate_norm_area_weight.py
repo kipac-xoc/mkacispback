@@ -11,18 +11,15 @@ def find_file_extension(dir_path, ext):
 
 def parseArguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('cfile', help='cfile (region name)')
-    # parser.add_argument('group', help='group data to one bin (9-11.5 keV) before fitting')
+    parser.add_argument('region_filename', help='cfile (region name)')
     parser.add_argument('dirname', type=str, help='output directory name')
     args = parser.parse_args()
     return args
 
 def main():
-    ## GAINFIT is representing whether the data is grouped to 1 bin (GAINFIT=1: no group, GAINTFIT=0: group)
     args = parseArguments()
-    # grpname = "_grp" if args.group == '0' else ""
 
-    cfile = args.cfile
+    cfile = args.region_filename
     cfile = cfile.split(".")[0]
     cfilename = cfile
 
