@@ -26,8 +26,8 @@ def main():
     s1 = Spectrum(f"{cfilename}.pi")
     area = s1.backScale*(8192*0.492/60)**2; print(f"area of {cfilename} = {area} arcmin^2") 
 
-    for file in find_file_extension(f'acispback_{cfile}','.total'):
-        weight_total = read_file(os.path.join(f'acispback_{cfile}',file))[0].strip()
+    for file in find_file_extension(f'{args.dirname}','.total'):
+        weight_total = read_file(os.path.join(f'{args.dirname}',file))[0].strip()
         print(f"total weight of {file} = {weight_total}")
         if float(weight_total) > 0:
             weight_total_final = weight_total

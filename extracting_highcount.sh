@@ -11,4 +11,4 @@ stat_uncer=$(echo "$count" | awk '{print 1/sqrt($1)}')
 echo ${stat_uncer} > stats_uncertainty.txt
 
 #0.05 + 1/sqrt(N) combined uncertainty
-echo "${stat_uncer}" | awk '{print 0.05+$1}' > all_uncertainty.txt
+echo "${stat_uncer}" | awk '{print sqrt(0.05^2+$1^2)}' > all_uncertainty.txt

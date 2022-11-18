@@ -52,14 +52,14 @@ if [ $(echo "$@" | grep -c "name=") -eq 1 ]; then MONAME=$(echo "$@" | grep -oE 
 if [ $(echo "$@" | grep -c "datamode=") -eq 1 ]; then INDATAMODE=$(echo "$@" | grep -oE "(datamode=.+)" | awk -F'[ ]' '{print $1}' | awk -F'[=]' '{print $2}'); fi
 if [ $(echo "$@" | grep -c "clean=") -eq 1 ]; then RM_TEMP=$(echo "$@" | grep -cE "clean=(yes|\"yes\"|\'yes\')"); fi
 
-## Edit Taweewat 9/14/2022
+## Edit Taweewat 9/14/2022-------
 if [ $(echo "$@" | grep -c "normfit=") -eq 1 ]; then NORMFIT=$(echo "$@" | grep -cE "normfit=(yes|\"yes\"|\'yes\')"); fi
 if [ $(echo "$@" | grep -c "specfile=") -eq 1 ]; then
 	SPECFILE=$(echo "$@" | grep -oE "(specfile=.+)" | awk -F'[ ]' '{print $1}' | awk -F'[=]' '{print $2}')
 	GENSPEC=0
 fi
-
 echo "NORMFIT Parameter = ${NORMFIT}"
+##---------------
 
 FORVF=$(dmhistory ${EV2FITS} acis_process_events 2>/dev/null | grep -oE "check_vf_pha=[\"noyes]+" | grep -oE "(no|yes)")
 FORVF=$(echo $FORVF | grep -oE "(no|yes)$")

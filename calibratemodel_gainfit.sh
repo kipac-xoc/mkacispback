@@ -122,14 +122,14 @@ else echo "clobber error while making xcm for calibration."; fi
 
 NORMALIZATION=$(cat ${LOG} | grep "#   1    1" | grep -oE "[0-9][.][0-9E.+-]+" | grep -m1 -oE "[0-9][.][0-9E.+-]+")
 echo "normalization = ${NORMALIZATION}"
-#Added-Taweewat-8/31/22
+#Added-Taweewat-8/31/22------------------
 rm norm_error.cat
 if [ "${GAINFIT}" -eq 1 ]; then
     cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9eE.+-]+" | head -4 | tr "\n" " " > norm_error.cat
 else
     echo ${NORMALIZATION} > norm_error.cat
 fi
-###
+###------------------
 rm acispback_lmod_temp.cpp 2>/dev/null
 while read line; do
     if [ $(echo "$line" | grep -c "flux\[i\]=flux_temp2") -eq 1 ]; then line="flux[i]=flux_temp2 *$NORMALIZATION;"; fi

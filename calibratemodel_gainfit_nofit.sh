@@ -113,10 +113,10 @@ else echo "clobber error while making xcm for calibration."; fi
 NORMALIZATION=1
 
 echo "normalization = $NORMALIZATION"
-#Added-Taweewat-8/31/22
+#Added-Taweewat-8/31/22------------------
 echo "normalization = $NORMALIZATION" > norm_error.cat
 #cat ${LOG} |grep  "#     1" | grep -oE "[0-9][.][0-9E.+-]+" | head -2 | tr "\n" " " >> norm_error.cat
-###
+###------------------
 rm acispback_lmod_temp.cpp 2>/dev/null
 while read line; do
     if [ $(echo "$line" | grep -c "flux\[i\]=flux_temp2") -eq 1 ]; then line="flux[i]=flux_temp2 *$NORMALIZATION;"; fi
