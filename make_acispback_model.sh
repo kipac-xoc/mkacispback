@@ -15,7 +15,11 @@ OUTMODEL="out_acispback_model.mo" # output model file name
 MONAME="acispback"                # output XSPEC model name
 DIRNAME="acispback"               # output directory name which contains output spectral model
 RM_TEMP=0                         # remove temporal files
-NORMFIT=0					  # whether we want to fit the high energy total normalization or not.
+
+##New parameter-Taweewat
+NORMFIT=0					     # whether we want to fit the high energy total normalization or not.
+FAKEEVT=0					     # set to make use of the fake event for very small regions
+####----
 
 XCM="temp_makemodel.xcm"
 LMODNAME="acispback_lmod"
@@ -54,11 +58,11 @@ if [ $(echo "$@" | grep -c "clean=") -eq 1 ]; then RM_TEMP=$(echo "$@" | grep -c
 
 ## Edit Taweewat 9/14/2022-------
 if [ $(echo "$@" | grep -c "normfit=") -eq 1 ]; then NORMFIT=$(echo "$@" | grep -cE "normfit=(yes|\"yes\"|\'yes\')"); fi
+if [ $(echo "$@" | grep -c "fakeevt=") -eq 1 ]; then FAKEEVT=$(echo "$@" | grep -cE "fakeevt=(yes|\"yes\"|\'yes\')"); fi
 if [ $(echo "$@" | grep -c "specfile=") -eq 1 ]; then
 	SPECFILE=$(echo "$@" | grep -oE "(specfile=.+)" | awk -F'[ ]' '{print $1}' | awk -F'[=]' '{print $2}')
 	GENSPEC=0
 fi
-echo "NORMFIT Parameter = ${NORMFIT}"
 ##---------------
 
 FORVF=$(dmhistory ${EV2FITS} acis_process_events 2>/dev/null | grep -oE "check_vf_pha=[\"noyes]+" | grep -oE "(no|yes)")
@@ -105,7 +109,7 @@ fi
 cd "$DIRNAME"
 
 ### make 32x32-binned weight map corresponding to input region, and deltaE curves for frame store lines
-bash ${SCRIPT_DIR}/makewmap.sh $ARGS_NEW
+bash ${SCRIPT_DIR}/makewmap.sh $ARGS_NEW $FAKEEVT
 if [ $? -gt 0 ]; then
 	echo "Exiting due to an error..."
 	exit 1
