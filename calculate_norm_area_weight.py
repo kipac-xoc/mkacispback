@@ -1,6 +1,13 @@
 from xspec import *
 import os, argparse
-from find_directory import read_file
+
+def read_file(filename):
+    if os.path.exists(filename):    
+        with open(filename,'r') as f:
+            lines = f.readlines()
+        return lines
+    else:
+        return None
 
 def find_file_extension(dir_path, ext):
     res=[]
