@@ -44,7 +44,7 @@ fi
 if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo -e "Calibrating the spectral model...\n"
     echo "Fitting energy range: 9.0-11.5 keV"
-    echo "cpd /xs" >$XCM
+    echo "cpd /none" > $XCM  #echo "cpd /xs" >$XCM
     echo "setp e" >>$XCM
     echo "setp com cs 1.3" >>$XCM
     echo "statistic cstat" >>$XCM
@@ -93,8 +93,8 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo "cpd ${IMG}/cps" >>$XCM
     echo "pl ld ra" >>$XCM
     echo "cpd none" >>$XCM
-    echo "cpd /xs" >>$XCM
-    echo "pl ld ra" >>$XCM
+    #echo "cpd /xs" >>$XCM
+    #echo "pl ld ra" >>$XCM
     echo "save mo ${OUTMODEL}" >>$XCM
 
     echo "log ${LOG2}" >>$XCM
