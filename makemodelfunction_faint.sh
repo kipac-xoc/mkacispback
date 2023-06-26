@@ -27,9 +27,9 @@ MAINFUNC="flux_temp = "
 ## generate proper model for each CCD
 if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "emin.dat" -a ! -e "emax.dat" ]; then
 	rm temp_emin.dat temp_emax.dat 2>/dev/null
-	dmlist "temp.rmf[cols ENERG_LO]" opt=data outfile=temp_emin_.dat
+	dmlist "temp.rmf[MATRIX][cols ENERG_LO]" opt=data outfile=temp_emin_.dat
 	cat temp_emin_.dat |grep -oE "[0-9]+\s+[0-9]+.[0-9]+" |grep -oE "\s[0-9]+.[0-9]+" >emin.dat
-	dmlist "temp.rmf[cols ENERG_HI]" opt=data outfile=temp_emax_.dat
+	dmlist "temp.rmf[MATRIX][cols ENERG_HI]" opt=data outfile=temp_emax_.dat
 	cat temp_emax_.dat |grep -oE "[0-9]+\s+[0-9]+.[0-9]+" |grep -oE "\s[0-9]+.[0-9]+" >emax.dat
 	while read line; do RMFDELTAE=$line; break; done <emin.dat
 	while read line; do RMFDELTAE=`perl -e "print $line - $RMFDELTAE"`; break; done <emax.dat
