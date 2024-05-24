@@ -25,6 +25,20 @@ LOG2="calbpbackmodel_entireErange.log"
 IMG="pbackmodel_fit.ps"
 PACKLOG="packagegen.log"
 
+emin=9.0
+emax=11.5
+[ -e spectrum_emin.txt ] && {
+    read emin < spectrum_emin.txt
+}
+[ -e spectrum_emax.txt ] && {
+    read emax < spectrum_emax.txt
+}
+echo "Emin Emax = $emin $emax"
+if [ "${GAINFIT}" -ne 1 ]; then
+    channels="$(dmlist temp.rmf"[EBOUNDS]" data,raw | awk -v emin=$emin -v emax=$emax '$2<=emin&&$3>emin{ch1=$1;printf ch1" "}$2<=emax&&$3>=emax{ch2=$1;print ch2,ch2-ch1+1}')"
+    echo "grppha channel spec: $channels"
+fi
+
 if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$LMODDAT" -a ! -e "$LMODOUTCPP" ]; then
     echo "${MONAME} 0 0. 1e5 c_acispback add 0 1" >$LMODDAT
     echo "// created at $(date)" >$LMODOUTCPP
@@ -44,7 +58,7 @@ fi
 
 if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo -e "Calibrating the spectral model...\n"
-    echo "Fitting energy range: 9.0-11.5 keV"
+        echo "Fitting energy range: $emin-$emax keV"
     echo "cpd /null" >$XCM # echo "cpd /xs" >$XCM
     echo "setp e" >>$XCM
     echo "setp com cs 1.3" >>$XCM
@@ -66,13 +80,13 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
         echo "backgrnd none" >>$XCM
     else
         echo "test -f temp_spec_grp.pi && rm temp_spec_grp.pi" >>$XCM
-        echo "grppha temp_spec.pi temp_spec_grp.pi comm='group 617 788 172 & exit'" >>$XCM #genspec=no
+	echo "grppha temp_spec.pi temp_spec_grp.pi comm='group "$channels" & exit'" >>$XCM #genspec=no
         echo "data 1:1 temp_spec_grp.pi" >>$XCM
         echo "backgrnd none" >>$XCM
     fi 
     echo "resp 1 temp.rmf" >>$XCM
     echo "ig **:**" >>$XCM
-    echo "no **:9.0-11.5" >>$XCM
+    echo "no **:$emin-$emax" >>$XCM
     if [ "${GAINFIT}" -eq 1 ]; then
         echo "gain fit" >>$XCM
         echo "1 0.0001" >>$XCM
@@ -94,12 +108,12 @@ if [ "$CLOB" = "yes" ] || [ "$CLOB" = "no" -a ! -e "$XCM" ]; then
     echo "sho fit" >>$XCM
     echo "log none" >>$XCM
     echo "ig **:**" >>$XCM
-    echo "no **:0.25-11.5" >>$XCM
+    echo "no **:0.25-$emax" >>$XCM
     echo "setp rebin 5 50" >>$XCM
     echo "setp com r y1" >>$XCM
     echo "pl ld ra" >>$XCM
 
-    echo "no **:0.25-11.5" >>$XCM
+    echo "no **:0.25-$emax" >>$XCM
     echo "setp com ti of" >>$XCM
     echo "cpd ${IMG}/cps" >>$XCM
     echo "pl ld ra" >>$XCM
